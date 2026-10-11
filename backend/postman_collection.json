@@ -1,0 +1,260 @@
+{
+  "info": {
+    "_postman_id": "c16d4900-00d8-4bdc-a538-062ef0a5843a",
+    "name": "CloudGuardian AI - Backend API",
+    "description": "Collection of all endpoints for the CloudGuardian AI Backend service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Root Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "API Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Servers",
+      "item": [
+        {
+          "name": "Get All Servers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servers"]
+            }
+          }
+        },
+        {
+          "name": "Get Server By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servers/srv-web-01",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servers", "srv-web-01"]
+            }
+          }
+        },
+        {
+          "name": "Get Server Metrics History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/servers/srv-web-01/metrics?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "servers", "srv-web-01", "metrics"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Metrics",
+      "item": [
+        {
+          "name": "Post Metric",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serverId\": \"srv-web-01\",\n  \"timestamp\": \"2026-10-11T12:00:00.000Z\",\n  \"cpuUsage\": 35.2,\n  \"memoryUsage\": 48.1,\n  \"diskUsage\": 52.0,\n  \"networkIn\": 220.5,\n  \"networkOut\": 180.3,\n  \"responseTimeMs\": 85,\n  \"errorRate\": 0.4,\n  \"requestsPerSec\": 240,\n  \"status\": \"healthy\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metrics"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alerts",
+      "item": [
+        {
+          "name": "Get Alerts (All)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alerts"]
+            }
+          }
+        },
+        {
+          "name": "Get Open Alerts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts?status=open",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alerts"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resolve Alert",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/alerts/:id/resolve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alerts", ":id", "resolve"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "ALERT_OBJECT_ID"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recoveries",
+      "item": [
+        {
+          "name": "Get Recoveries History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recoveries?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recoveries"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "Get Stats Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stats/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "stats", "summary"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Simulate",
+      "item": [
+        {
+          "name": "Simulate Fault",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serverId\": \"srv-web-01\",\n  \"faultType\": \"memory_leak\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/simulate/fault",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "simulate", "fault"]
+            }
+          }
+        },
+        {
+          "name": "Simulate Reset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serverId\": \"srv-web-01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/simulate/reset",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "simulate", "reset"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+
