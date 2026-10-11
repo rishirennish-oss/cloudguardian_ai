@@ -1,0 +1,1 @@
+[{"serverId":"srv-web-01","name":"Web Server 01","type":"web","port":6001},{"serverId":"srv-api-01","name":"API Server 01","type":"api","port":6002},{"serverId":"srv-db-01","name":"Database Server 01","type":"database","port":6003},{"serverId":"srv-cache-01","name":"Cache Server 01","type":"cache","port":6004}]

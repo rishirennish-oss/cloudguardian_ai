@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator-deployment
+  labels:
+    app: simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+        - name: simulator
+          image: cloudguardian-simulator:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6001
+            - containerPort: 6002
+            - containerPort: 6003
+            - containerPort: 6004
+          env:
+            - name: SERVERS_FILE
+              value: "/app/shared/servers.json"
+          volumeMounts:
+            - name: shared-config
+              mountPath: /app/shared
+              readOnly: true
+      volumes:
+        - name: shared-config
+          configMap:
+            name: shared-servers-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: cloudguardian-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+            - name: MONGO_URI
+              value: "mongodb://mongo-service:27017/cloudguardian"
+            - name: ML_SERVICE_URL
+              value: "http://ml-service:8000"
+            - name: RECOVERY_SERVICE_URL
+              value: "http://recovery-service:5002"
+            - name: SERVERS_FILE
+              value: "/app/shared/servers.json"
+          volumeMounts:
+            - name: shared-config
+              mountPath: /app/shared
+              readOnly: true
+      volumes:
+        - name: shared-config
+          configMap:
+            name: shared-servers-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-service-deployment
+  labels:
+    app: ml-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-service
+  template:
+    metadata:
+      labels:
+        app: ml-service
+    spec:
+      containers:
+        - name: ml-service
+          image: cloudguardian-ml-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PORT
+              value: "8000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recovery-service-deployment
+  labels:
+    app: recovery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recovery-service
+  template:
+    metadata:
+      labels:
+        app: recovery-service
+    spec:
+      containers:
+        - name: recovery-service
+          image: cloudguardian-recovery-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5002
+          env:
+            - name: PORT
+              value: "5002"
+            - name: SIM_HOST
+              value: "simulator"
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cloudguardian-secrets
+                  key: anthropic-api-key
+                  optional: true

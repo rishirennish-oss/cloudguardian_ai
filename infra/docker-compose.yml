@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: cloudguardian-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: cloudguardian
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - mongo-data:/data/db
+
+  simulator:
+    build:
+      context: ../simulator
+      dockerfile: Dockerfile
+    container_name: cloudguardian-simulator
+    restart: unless-stopped
+    ports:
+      - "6001:6001"
+      - "6002:6002"
+      - "6003:6003"
+      - "6004:6004"
+    environment:
+      - SERVERS_FILE=/app/shared/servers.json
+    volumes:
+      - ../shared:/app/shared:ro
+
+  agent:
+    build:
+      context: ../agent
+      dockerfile: Dockerfile
+    container_name: cloudguardian-agent
+    restart: unless-stopped
+    environment:
+      - SIM_HOST=simulator
+      - BACKEND_URL=http://backend:5000
+      - SERVERS_FILE=/app/shared/servers.json
+      - COLLECT_INTERVAL_MS=5000
+    volumes:
+      - ../shared:/app/shared:ro
+    depends_on:
+      - simulator
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: cloudguardian-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/cloudguardian
+      - ML_SERVICE_URL=http://ml-service:8000
+      - RECOVERY_SERVICE_URL=http://recovery-service:5002
+      - SERVERS_FILE=/app/shared/servers.json
+    volumes:
+      - ../shared:/app/shared:ro
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  ml-service:
+    build:
+      context: ../ml-service
+      dockerfile: Dockerfile
+    container_name: cloudguardian-ml-service
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+
+  recovery-service:
+    build:
+      context: ../recovery-service
+      dockerfile: Dockerfile
+    container_name: cloudguardian-recovery-service
+    restart: unless-stopped
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - SIM_HOST=simulator
+      - ANTHROPIC_API_KEY=
+    volumes:
+      - ../shared:/app/shared:ro
+    depends_on:
+      - simulator
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: cloudguardian-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5000/api
+      - VITE_USE_MOCK=false
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
