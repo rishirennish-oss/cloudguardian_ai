@@ -10,3 +10,4 @@ COPY src ./src
 EXPOSE 5002
 
 CMD ["npm", "start"]
+
