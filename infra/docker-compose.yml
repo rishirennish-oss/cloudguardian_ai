@@ -49,6 +49,7 @@ services:
       - ../shared:/app/shared:ro
     depends_on:
       - simulator
+      - backend
 
   backend:
     build:
@@ -69,6 +70,10 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+      ml-service:
+        condition: service_started
+      recovery-service:
+        condition: service_started
 
   ml-service:
     build:
@@ -92,6 +97,7 @@ services:
     environment:
       - PORT=5002
       - SIM_HOST=simulator
+      - SERVERS_FILE=/app/shared/servers.json
       - ANTHROPIC_API_KEY=
     volumes:
       - ../shared:/app/shared:ro

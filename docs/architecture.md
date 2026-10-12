@@ -120,3 +120,4 @@ flowchart TD
 - **Medium Risk (`0.30 – 0.59`)**: Warning stage; no intrusive automated actions taken (safety policy).
 - **High Risk (`0.60 – 0.84`)**: Critical degradation imminent; automated remediation triggered.
 - **Critical Risk (`>= 0.85`)**: Severe failure imminent or active; immediate automated remediation executed.
+

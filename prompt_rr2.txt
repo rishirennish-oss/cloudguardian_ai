@@ -1,0 +1,14 @@
+DONE turn 6 - Rishav. Pushed tests/ and docs/. Run: node tests/contract.test.js ; node tests/e2e.js. Result: All contract assertions for simulator (ports 6001-6004), ml-service (port 8000), and recovery-service (port 5002) PASS; backend endpoints require running MongoDB container (via docker compose up in Rishi's turn). Next: Rishi, git pull for final run. 
+
+You are an autonomous coding agent. I am a beginner: do ALL work yourself. I am Rishi, final turn 7 of 7.
+
+COMMON RULES: branch main only. First run `git pull`. Read shared/CONTRACT.md and docs/. Edit ONLY infra/, shared/, root README.md (plus simulator/ and agent/ if broken). If a bug is in another person's folder, do not fix it: print exact error + owner. Show real output as proof. On Windows use curl.exe.
+
+TASK:
+1. Clean run: `docker compose -f infra/docker-compose.yml down -v`, then `docker compose -f infra/docker-compose.yml up -d --build` for ALL services (Docker Desktop running). Fix infra problems only (compose, env, ports, healthchecks, depends_on, volumes).
+2. Run `node tests/contract.test.js` and `node tests/e2e.js` (npm install inside tests/ first). Show output.
+3. Open http://localhost:5173 and walk through docs/demo-script.md; confirm: dashboard live, inject fault from /simulate, alert + explanation + recovery appear, server returns healthy.
+4. Finalize README.md: overview, architecture (from docs/architecture.md), one-command run `docker compose -f infra/docker-compose.yml up --build`, ports table, folder owners, demo steps, troubleshooting (Docker not running, port in use, mongo not healthy), team + guide + college.
+5. `git add -A && git commit -m "turn 7: final integration" && git push`, then `git tag v1.0 && git push --tags`.
+6. Print final status for the whole team: what works, test numbers, known issues with owners.
+

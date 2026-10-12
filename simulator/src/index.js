@@ -4,10 +4,27 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
-const serversFilePath = path.resolve(
-  process.cwd(),
-  process.env.SERVERS_FILE || '../shared/servers.json'
-);
+function resolveServersFilePath() {
+  const envVal = process.env.SERVERS_FILE || '../shared/servers.json';
+  const resolved = path.resolve(process.cwd(), envVal);
+  if (fs.existsSync(resolved)) {
+    return resolved;
+  }
+  const fallbackCandidates = [
+    path.resolve(process.cwd(), 'shared/servers.json'),
+    path.resolve(__dirname, '../../shared/servers.json'),
+    path.resolve(__dirname, '../shared/servers.json'),
+    '/app/shared/servers.json'
+  ];
+  for (const candidate of fallbackCandidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return resolved;
+}
+
+const serversFilePath = resolveServersFilePath();
 
 if (!fs.existsSync(serversFilePath)) {
   console.error(`FATAL: Servers config file not found at: ${serversFilePath}`);

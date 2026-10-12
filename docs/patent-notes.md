@@ -94,3 +94,4 @@ The system of claim 1, wherein the operations further comprise:
 
 ### Claim 8 (Dependent Claim - Hybrid Explainability):
 The system of claim 1, wherein synthesizing the natural language explanation comprises generating a deterministic template-based explanation from the deviating operating metrics and predicted failure type, selectively transmitting the template-based explanation to a generative large language model (LLM) API for stylistic refinement when an external API credential is configured, and falling back silently to the deterministic template-based explanation upon occurrence of any external network or authentication fault.
+

@@ -63,3 +63,4 @@
 ## Fallback / Troubleshooting Tips
 - **If alert takes longer than 40s**: Explain that the simulator escalates over 60s to mirror realistic gradual leaks, demonstrating early detection before node collapse.
 - **To demonstrate safety rules**: Immediately click "Inject Fault" again; show the system return `"cooldown active"` to prove rate-limiting and anti-flapping protection.
+

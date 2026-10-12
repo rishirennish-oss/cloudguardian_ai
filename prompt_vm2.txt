@@ -1,0 +1,16 @@
+DONE turn 5 - Krishna. Pushed frontend/. Run: cd frontend && npm install && npm run dev -> http://localhost:5173
+. Next: Rishav, git pull now for tests and docs.
+
+You are an autonomous coding agent. I am a beginner: do ALL work yourself. I am Rishav, turn 6 of 7.
+
+COMMON RULES: branch main only. First run `git pull`. Read shared/CONTRACT.md. Edit ONLY tests/ and docs/. If a test finds a bug in another folder, do not fix it: report exact error + owner (Rishi: simulator/agent/infra, Sohani: ml-service, Vedansh: backend, Krishna: frontend, me: recovery-service; recovery-service is mine, you may fix it this turn). Show real output as proof. On Windows use curl.exe.
+
+TASK:
+1. tests/package.json + tests/contract.test.js (Node, axios, plain asserts, no heavy framework): check every service /health (simulator 6001-6004, ml 8000, recovery 5002, backend 5000/api/health); ML /predict keys + enums; recovery /recover and /explain keys; backend endpoints return {success:true,data} with contract shapes (servers, servers/:id, servers/:id/metrics, alerts, recoveries, stats/summary); print PASS/FAIL per check and exit code 1 on any FAIL.
+2. tests/e2e.js: for each of the 5 fault types on srv-web-01 sequentially (reset between, wait for healthy): POST backend /api/simulate/fault, poll /api/alerts and /api/servers every 5s up to 180s; record detection time (fault start -> alert created), recovery time (alert created -> alert resolved), final server status; print a results table. These are our performance numbers.
+3. tests/README.md: how to run.
+4. docs/: project-report-outline.md (abstract, problem, objectives, architecture, modules, algorithms, results table filled with real e2e numbers, limitations, future work); architecture.md (Mermaid diagram of the contract FLOW + tech stack table); patent-notes.md (title, field, background, problem, summary, novelty = closed loop of predict + auto-recover + AI explanation, drawings list, 6-8 draft claims); demo-script.md (2-minute live demo steps).
+
+RUN against the real full stack: `docker compose -f infra/docker-compose.yml up -d --build` (Docker Desktop running), wait ~30s, then `node tests/contract.test.js` and `node tests/e2e.js`; show output; then `docker compose -f infra/docker-compose.yml down`. Put real numbers in docs.
+
+FINISH: `git add tests/ docs/ && git commit -m "turn 6: tests and docs" && git push` (rejected -> `git pull --rebase` then push). Print for me to post: "DONE turn 6 - Rishav. Pushed tests/ and docs/. Run: node tests/contract.test.js ; node tests/e2e.js. Result: <pass/fail summary + any bug with owner>. Next: Rishi, git pull for final run."

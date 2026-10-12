@@ -363,3 +363,4 @@ runContractTests().catch((err) => {
   console.error('Fatal test execution failure:', err);
   process.exit(1);
 });
+

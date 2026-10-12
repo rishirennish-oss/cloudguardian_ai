@@ -63,3 +63,4 @@ npm run test:e2e
 ### Exit Codes
 - Returns `0` if all assertions pass.
 - Returns `1` if any assertion fails or an endpoint times out.
+

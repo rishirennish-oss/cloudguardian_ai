@@ -10,10 +10,33 @@ const COLLECT_INTERVAL_MS = parseInt(process.env.COLLECT_INTERVAL_MS || '5000', 
 const SERVERS_FILE = process.env.SERVERS_FILE || '../shared/servers.json';
 const AGENT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 6010;
 
-const serversFilePath = path.resolve(process.cwd(), SERVERS_FILE);
+function resolveServersFilePath() {
+  const envVal = process.env.SERVERS_FILE || '../shared/servers.json';
+  const resolved = path.resolve(process.cwd(), envVal);
+  if (fs.existsSync(resolved)) {
+    return resolved;
+  }
+  const fallbackCandidates = [
+    path.resolve(process.cwd(), 'shared/servers.json'),
+    path.resolve(__dirname, '../../shared/servers.json'),
+    path.resolve(__dirname, '../shared/servers.json'),
+    '/app/shared/servers.json'
+  ];
+  for (const candidate of fallbackCandidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return resolved;
+}
+
+let serversFilePath = resolveServersFilePath();
 
 function loadServers() {
   try {
+    if (!fs.existsSync(serversFilePath)) {
+      serversFilePath = resolveServersFilePath();
+    }
     if (!fs.existsSync(serversFilePath)) {
       console.warn(`[AGENT] Warning: Servers file not found at ${serversFilePath}`);
       return [];

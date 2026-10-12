@@ -123,3 +123,4 @@ The full end-to-end autonomic loop was benchmarked against all five failure type
 - **Kubernetes Operator Integration**: Package CloudGuardian AI as a Kubernetes Custom Resource Definition (CRD) and Operator managing Pod evictions, HPA scaling, and taint configurations.
 - **eBPF-Powered Telemetry**: Replace user-space HTTP metric polling with kernel-level eBPF probes for zero-overhead, sub-second telemetry collection.
 - **Reinforcement Learning Remediation**: Implement Deep Q-Networks (DQN) to dynamically select cost-optimal remediation strategies under varying traffic conditions.
+
