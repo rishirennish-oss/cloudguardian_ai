@@ -1,0 +1,14 @@
+{
+  "name": "cloudguardian-tests",
+  "version": "1.0.0",
+  "description": "Contract and End-to-End Test Suite for CloudGuardian AI",
+  "main": "contract.test.js",
+  "scripts": {
+    "test": "node contract.test.js",
+    "test:contract": "node contract.test.js",
+    "test:e2e": "node e2e.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
+}
